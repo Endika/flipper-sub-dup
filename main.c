@@ -255,13 +255,15 @@ int32_t sub_dup_finder_app(void *p) {
     view_set_previous_callback(widget_get_view(app_state.credits_widget), back_to_submenu);
     view_set_previous_callback(popup_get_view(app_state.popup), back_to_submenu);
 
-    widget_add_string_element(app_state.credits_widget, 0, 10, AlignLeft, AlignTop, FontPrimary,
-                              "Sub Duplicate Finder v" APP_VERSION);
-    widget_add_string_element(app_state.credits_widget, 0, 25, AlignLeft, AlignTop, FontPrimary,
+    widget_add_string_element(app_state.credits_widget, 0, 2, AlignLeft, AlignTop, FontPrimary,
+                              "Sub Duplicate Finder");
+    widget_add_string_element(app_state.credits_widget, 0, 14, AlignLeft, AlignTop, FontSecondary,
+                              "v" APP_VERSION);
+    widget_add_string_element(app_state.credits_widget, 0, 26, AlignLeft, AlignTop, FontPrimary,
                               "Author: Endika");
-    widget_add_string_element(app_state.credits_widget, 0, 38, AlignLeft, AlignTop, FontSecondary,
+    widget_add_string_element(app_state.credits_widget, 0, 40, AlignLeft, AlignTop, FontSecondary,
                               "https://github.com/endika/");
-    widget_add_string_element(app_state.credits_widget, 0, 48, AlignLeft, AlignTop, FontSecondary,
+    widget_add_string_element(app_state.credits_widget, 0, 50, AlignLeft, AlignTop, FontSecondary,
                               "flipper-sub-dup");
 
     submenu_add_item(app_state.main_submenu, "Find Duplicates", SubDupFinderSubmenuIndexScan,
