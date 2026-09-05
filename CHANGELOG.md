@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/Endika/flipper-sub-dup/compare/v1.2.1...v1.2.2) (2026-09-05)
+
+
+### Bug Fixes
+
+* guard the app allocation so the null cannot flow ([b941a1a](https://github.com/Endika/flipper-sub-dup/commit/b941a1afbd6f4e7d04a1db8202888838b58bb7b3))
+
 ## [1.2.1](https://github.com/Endika/flipper-sub-dup/compare/v1.2.0...v1.2.1) (2026-08-04)
 
 
