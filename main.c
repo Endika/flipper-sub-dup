@@ -7,6 +7,10 @@
 
 static SubDupFinderApp *app_alloc(void) {
     SubDupFinderApp *app = malloc(sizeof(SubDupFinderApp));
+    // furi's malloc crashes on exhaustion rather than returning NULL, so this only
+    // documents the invariant — but pass the pointer bare: cppcheck's value-flow
+    // keeps the null alive through `furi_check(app != NULL)`.
+    furi_check(app);
     memset(app, 0, sizeof(SubDupFinderApp));
     app->view_dispatcher = view_dispatcher_alloc();
     app->main_submenu = submenu_alloc();
