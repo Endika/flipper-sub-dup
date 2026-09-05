@@ -6,3 +6,8 @@ test_logic
 .DS_Store
 *.swp
 *~
+
+# Build output
+dist/
+.ufbt/
+*.fap
