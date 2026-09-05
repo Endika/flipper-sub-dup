@@ -19,6 +19,10 @@ jobs:
       - uses: googleapis/release-please-action@v5
         id: release
         with:
+          # Without a user token the release PR is opened by GITHUB_TOKEN, which triggers
+          # no other workflow: the PR gets zero checks and branch protection blocks it
+          # forever, waiting on a manual approval.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
