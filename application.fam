@@ -2,6 +2,12 @@ App(
     appid="sub_dup_finder",
     name="Sub Duplicate Finder",
     apptype=FlipperAppType.EXTERNAL,
+    sources=[
+        "main.c",
+        "logic.c",
+        "storage_helper.c",
+        "ui.c",
+    ],
     entry_point="sub_dup_finder_app",
     stack_size=4 * 1024,
     fap_version="1.2.1",  # x-release-please-version
