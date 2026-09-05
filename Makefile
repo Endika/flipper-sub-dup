@@ -23,7 +23,7 @@ format:
 	clang-format -i *.c *.h tests/*.c
 
 linter:
-	cppcheck --enable=all --error-exitcode=1 --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=missingInclude .
+	cppcheck --enable=all --check-level=exhaustive --error-exitcode=1 --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=missingInclude .
 
 test: logic.o tests/test_logic.o
 	$(CC) $(CFLAGS) -o test_logic logic.o tests/test_logic.o

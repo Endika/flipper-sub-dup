@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void test_duplicate_detection() {
+static void test_duplicate_detection() {
     HashDatabase db;
     db.count = 4;
 
@@ -25,7 +25,7 @@ void test_duplicate_detection() {
     printf("Test passed: Duplicate detection works.\n");
 }
 
-void test_db_remove_record() {
+static void test_db_remove_record() {
     HashDatabase db;
     db.count = 3;
 
@@ -47,7 +47,7 @@ void test_db_remove_record() {
     printf("Test passed: db_remove_record works.\n");
 }
 
-void test_db_remove_record_not_found() {
+static void test_db_remove_record_not_found() {
     HashDatabase db;
     db.count = 2;
 
@@ -65,7 +65,7 @@ void test_db_remove_record_not_found() {
     printf("Test passed: db_remove_record handles missing file.\n");
 }
 
-void test_db_remove_record_last() {
+static void test_db_remove_record_last() {
     HashDatabase db;
     db.count = 1;
 

@@ -16,7 +16,7 @@ uint32_t calculate_crc32(uint32_t crc, const uint8_t *data, size_t size) {
 }
 
 // Simple Insertion Sort to replace restricted qsort
-void sort_records(FileRecord *records, size_t count) {
+static void sort_records(FileRecord *records, size_t count) {
     for (size_t i = 1; i < count; i++) {
         FileRecord key = records[i];
         int j = (int)i - 1;
