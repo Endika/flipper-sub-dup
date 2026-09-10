@@ -1,7 +1,10 @@
 name: CI
 
 on:
+  # Only main: an unfiltered push trigger fires a second, identical run for every
+  # branch push that already has a pull_request run.
   push:
+    branches: [main]
   pull_request:
   workflow_call:
 
