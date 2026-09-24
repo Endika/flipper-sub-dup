@@ -8,7 +8,6 @@
 #include <gui/view_dispatcher.h>
 
 #define SCAN_DIR "/ext/subghz"
-#define FULL_PATH_LEN 280
 
 typedef enum {
     SubDupFinderViewSubmenu,
@@ -17,6 +16,7 @@ typedef enum {
     SubDupFinderViewConfirm,
     SubDupFinderViewCredits,
     SubDupFinderViewPopup,
+    SubDupFinderViewSummary,
 } SubDupFinderView;
 
 typedef enum {
@@ -30,9 +30,14 @@ typedef struct {
     Submenu *groups_submenu;
     Submenu *files_in_group_submenu;
     DialogEx *confirm_dialog;
+    DialogEx *summary_dialog;
     Widget *credits_widget;
     Popup *popup;
     HashDatabase db;
-    char selected_path[APP_MAX_PATH_LEN];
+    ScanStats scan_stats;
+    char scan_summary[96];
+    char scanned_dir[FULL_PATH_LEN];
+    char selected_path[FULL_PATH_LEN];
+    char selected_name[APP_MAX_PATH_LEN];
     size_t selected_group_index;
 } SubDupFinderApp;

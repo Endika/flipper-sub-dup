@@ -40,8 +40,8 @@ This project uses a standard `Makefile` for local development on your host machi
 
 | File | Responsibility |
 | --- | --- |
-| `logic.h` / `logic.c` | Pure domain logic: CRC32, duplicate detection, record removal. No Flipper SDK dependency, testable with plain `gcc`. |
-| `app_state.h` | App state struct, view enums, shared constants (`SCAN_DIR`, `FULL_PATH_LEN`). |
+| `logic.h` / `logic.c` | Pure domain logic: CRC32, duplicate detection, record removal, scan decisions. No Flipper SDK dependency, testable with plain `gcc`. |
+| `app_state.h` | App state struct, view enums, shared constants (`SCAN_DIR`). |
 | `storage_helper.h` / `.c` | File I/O: directory scanning, file hashing, file deletion. |
 | `ui.h` / `ui.c` | UI callbacks, rendering, view setup. |
 | `main.c` | App lifecycle orchestration: alloc, setup, run, free. |
