@@ -138,3 +138,58 @@ ScanAdd scan_add_file(HashDatabase *db, ScanStats *stats, const char *name, uint
     stats->added++;
     return ScanAddOk;
 }
+
+bool path_is_ext_root(const char *path) {
+    return path != NULL && strcmp(path, "/ext") == 0;
+}
+
+bool path_parent(const char *path, char *out, size_t cap) {
+    if (path == NULL || path_is_ext_root(path))
+        return false;
+
+    const char *slash = strrchr(path, '/');
+    if (slash == NULL || slash == path)
+        return false;
+
+    size_t len = (size_t)(slash - path);
+    if (len >= cap)
+        return false;
+
+    memcpy(out, path, len);
+    out[len] = '\0';
+    return true;
+}
+
+void path_display_name(const char *path, char *out, size_t cap) {
+    const char *name;
+    if (path_is_ext_root(path)) {
+        name = "SD card";
+    } else {
+        const char *slash = strrchr(path, '/');
+        name = slash ? slash + 1 : path;
+    }
+    snprintf(out, cap, "%s", name);
+}
+
+void path_header_tail(const char *path, size_t max_chars, char *out, size_t cap) {
+    size_t len = strlen(path);
+    if (len <= max_chars) {
+        snprintf(out, cap, "%s", path);
+        return;
+    }
+
+    const char *ellipsis = "...";
+    size_t ellipsis_len = strlen(ellipsis);
+    size_t tail_len = max_chars > ellipsis_len ? max_chars - ellipsis_len : 0;
+    snprintf(out, cap, "%s%s", ellipsis, path + (len - tail_len));
+}
+
+BrowseEntryDecision browse_decide_entry(const char *name, size_t count, size_t max_names) {
+    if (name[0] == '.')
+        return BrowseEntrySkip;
+    if (strlen(name) >= APP_MAX_PATH_LEN)
+        return BrowseEntryOverflow;
+    if (count >= max_names)
+        return BrowseEntryOverflow;
+    return BrowseEntryAdd;
+}

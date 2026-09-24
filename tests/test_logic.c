@@ -243,6 +243,118 @@ static void test_scan_dir_is_valid_table() {
     printf("Test passed: scan_dir_is_valid table holds.\n");
 }
 
+static void test_path_is_ext_root_table() {
+    assert(path_is_ext_root("/ext") == true);
+    assert(path_is_ext_root("/ext/subghz") == false);
+    assert(path_is_ext_root(NULL) == false);
+
+    printf("Test passed: path_is_ext_root only matches the SD root.\n");
+}
+
+static void test_path_parent_ascends_one_level() {
+    char parent[FULL_PATH_LEN];
+
+    assert(path_parent("/ext/subghz/nested", parent, sizeof(parent)) == true);
+    assert(strcmp(parent, "/ext/subghz") == 0);
+
+    printf("Test passed: path_parent strips the last segment.\n");
+}
+
+static void test_path_parent_reaches_ext_root() {
+    char parent[FULL_PATH_LEN];
+
+    assert(path_parent("/ext/subghz", parent, sizeof(parent)) == true);
+    assert(strcmp(parent, "/ext") == 0);
+
+    printf("Test passed: path_parent of a top-level folder is the SD root.\n");
+}
+
+static void test_path_parent_stops_at_ext_root() {
+    char parent[FULL_PATH_LEN];
+
+    assert(path_parent("/ext", parent, sizeof(parent)) == false);
+
+    printf("Test passed: path_parent refuses to go above the SD root.\n");
+}
+
+static void test_path_display_name_sd_card_for_ext_root() {
+    char name[APP_MAX_PATH_LEN];
+
+    path_display_name("/ext", name, sizeof(name));
+
+    assert(strcmp(name, "SD card") == 0);
+
+    printf("Test passed: the SD root displays as \"SD card\".\n");
+}
+
+static void test_path_display_name_basename_for_nested() {
+    char name[APP_MAX_PATH_LEN];
+
+    path_display_name("/ext/subghz/nested", name, sizeof(name));
+
+    assert(strcmp(name, "nested") == 0);
+
+    printf("Test passed: a nested folder displays as its basename.\n");
+}
+
+static void test_path_header_tail_keeps_short_path() {
+    char header[32];
+
+    path_header_tail("/ext/subghz", 20, header, sizeof(header));
+
+    assert(strcmp(header, "/ext/subghz") == 0);
+
+    printf("Test passed: a path that fits the header is shown in full.\n");
+}
+
+static void test_path_header_tail_shows_ellipsis_tail_for_long_path() {
+    char path[64] = "/ext/";
+    memset(path + 5, 'x', 40);
+    path[45] = '\0';
+    char header[32];
+
+    path_header_tail(path, 20, header, sizeof(header));
+
+    assert(strcmp(header, "...xxxxxxxxxxxxxxxxx") == 0);
+
+    printf("Test passed: a path longer than the header shows its tail after \"...\".\n");
+}
+
+static void test_browse_decide_entry_hides_dot_folders() {
+    assert(browse_decide_entry(".config", 0, BROWSE_MAX) == BrowseEntrySkip);
+
+    printf("Test passed: a dot-folder is hidden from the browser.\n");
+}
+
+static void test_browse_decide_entry_accepts_boundary_name() {
+    char name[APP_MAX_PATH_LEN];
+    memset(name, 'a', APP_MAX_PATH_LEN - 1);
+    name[APP_MAX_PATH_LEN - 1] = '\0';
+    assert(strlen(name) == APP_MAX_PATH_LEN - 1);
+
+    assert(browse_decide_entry(name, 0, BROWSE_MAX) == BrowseEntryAdd);
+
+    printf("Test passed: a folder name of exactly APP_MAX_PATH_LEN - 1 is accepted.\n");
+}
+
+static void test_browse_decide_entry_overflows_one_byte_over_boundary() {
+    char name[APP_MAX_PATH_LEN + 1];
+    memset(name, 'a', APP_MAX_PATH_LEN);
+    name[APP_MAX_PATH_LEN] = '\0';
+    assert(strlen(name) == APP_MAX_PATH_LEN);
+
+    assert(browse_decide_entry(name, 0, BROWSE_MAX) == BrowseEntryOverflow);
+
+    printf("Test passed: a folder name one byte over the boundary overflows.\n");
+}
+
+static void test_browse_decide_entry_overflows_when_full() {
+    assert(browse_decide_entry("folder", BROWSE_MAX, BROWSE_MAX) == BrowseEntryOverflow);
+    assert(browse_decide_entry("folder", BROWSE_MAX - 1, BROWSE_MAX) == BrowseEntryAdd);
+
+    printf("Test passed: a full listing overflows, one slot short still fits.\n");
+}
+
 int main() {
     test_duplicate_detection();
     test_same_hash_different_size_not_grouped();
@@ -258,5 +370,17 @@ int main() {
     test_scan_add_accepts_uppercase_sub_ignores_txt();
     test_path_join_refuses_overflow();
     test_scan_dir_is_valid_table();
+    test_path_is_ext_root_table();
+    test_path_parent_ascends_one_level();
+    test_path_parent_reaches_ext_root();
+    test_path_parent_stops_at_ext_root();
+    test_path_display_name_sd_card_for_ext_root();
+    test_path_display_name_basename_for_nested();
+    test_path_header_tail_keeps_short_path();
+    test_path_header_tail_shows_ellipsis_tail_for_long_path();
+    test_browse_decide_entry_hides_dot_folders();
+    test_browse_decide_entry_accepts_boundary_name();
+    test_browse_decide_entry_overflows_one_byte_over_boundary();
+    test_browse_decide_entry_overflows_when_full();
     return 0;
 }

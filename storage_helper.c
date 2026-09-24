@@ -96,3 +96,43 @@ bool storage_delete_file(const char *path) {
     furi_record_close(RECORD_STORAGE);
     return ok;
 }
+
+bool storage_list_folders(const char *dir, char names[][APP_MAX_PATH_LEN], size_t max_names,
+                          size_t *count, size_t *overflow) {
+    *count = 0;
+    *overflow = 0;
+
+    Storage *storage = furi_record_open(RECORD_STORAGE);
+    File *dir_file = storage_file_alloc(storage);
+    bool opened = storage_dir_open(dir_file, dir);
+
+    if (opened) {
+        FileInfo file_info;
+        // One byte larger than the record field, so a boundary and a truncated name differ.
+        char name[APP_MAX_PATH_LEN + 1];
+
+        while (storage_dir_read(dir_file, &file_info, name, sizeof(name))) {
+            if (!file_info_is_dir(&file_info))
+                continue;
+
+            switch (browse_decide_entry(name, *count, max_names)) {
+                case BrowseEntrySkip:
+                    break;
+                case BrowseEntryOverflow:
+                    (*overflow)++;
+                    break;
+                case BrowseEntryAdd:
+                    // Explicit precision, not "%s": browse_decide_entry already bounds name to
+                    // APP_MAX_PATH_LEN - 1, but the compiler can't see across that call.
+                    snprintf(names[*count], APP_MAX_PATH_LEN, "%.*s", APP_MAX_PATH_LEN - 1, name);
+                    (*count)++;
+                    break;
+            }
+        }
+        storage_dir_close(dir_file);
+    }
+
+    storage_file_free(dir_file);
+    furi_record_close(RECORD_STORAGE);
+    return opened;
+}
