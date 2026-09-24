@@ -6,6 +6,7 @@ App(
         "main.c",
         "logic.c",
         "storage_helper.c",
+        "settings.c",
         "ui.c",
     ],
     entry_point="sub_dup_finder_app",

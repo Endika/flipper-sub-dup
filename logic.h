@@ -8,6 +8,7 @@
 #define MAX_FILES 128
 #define APP_MAX_PATH_LEN 64
 #define FULL_PATH_LEN 280
+#define BROWSE_MAX 32
 
 typedef struct {
     char path[APP_MAX_PATH_LEN];
@@ -50,5 +51,18 @@ bool path_join(char *out, size_t cap, const char *dir, const char *name);
 bool scan_dir_is_valid(const char *path);
 ScanAdd scan_add_file(HashDatabase *db, ScanStats *stats, const char *name, uint32_t size,
                       uint32_t hash, bool read_ok);
+
+bool path_is_ext_root(const char *path);
+bool path_parent(const char *path, char *out, size_t cap);
+void path_display_name(const char *path, char *out, size_t cap);
+void path_header_tail(const char *path, size_t max_chars, char *out, size_t cap);
+
+typedef enum {
+    BrowseEntrySkip,
+    BrowseEntryAdd,
+    BrowseEntryOverflow,
+} BrowseEntryDecision;
+
+BrowseEntryDecision browse_decide_entry(const char *name, size_t count, size_t max_names);
 
 #endif
